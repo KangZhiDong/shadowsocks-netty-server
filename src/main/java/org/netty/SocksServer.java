@@ -1,10 +1,10 @@
 package org.netty;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.netty.config.Config;
 import org.netty.config.ConfigXmlLoader;
 import org.netty.proxy.HostHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -15,7 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 public class SocksServer {
 
-	private static Log logger = LogFactory.getLog(SocksServer.class);
+	private static Logger logger = LoggerFactory.getLogger(SocksServer.class);
 
 	private static final String CONFIG = "conf/config.xml";
 

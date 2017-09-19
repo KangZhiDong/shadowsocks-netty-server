@@ -1,9 +1,9 @@
 package org.netty.proxy;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.netty.encryption.CryptUtil;
 import org.netty.encryption.ICrypt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -18,7 +18,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
  */
 public class IntenetDataHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
-	private static Log logger = LogFactory.getLog(IntenetDataHandler.class);
+	private static Logger logger = LoggerFactory.getLogger(IntenetDataHandler.class);
 
 	private final ChannelHandlerContext clientProxyChannel;
 	private ICrypt _crypt;
@@ -39,7 +39,7 @@ public class IntenetDataHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	protected void channelRead0(ChannelHandlerContext ctx, ByteBuf msg) {
 		try {
 			byte[] encrypt = CryptUtil.encrypt(_crypt, msg);
-			clientProxyChannel.writeAndFlush(Unpooled.copiedBuffer(encrypt));
+			clientProxyChannel.writeAndFlush(Unpooled.wrappedBuffer(encrypt));
 		} catch (Exception e) {
 			ctx.close();
 			clientProxyChannel.close();
@@ -57,6 +57,7 @@ public class IntenetDataHandler extends SimpleChannelInboundHandler<ByteBuf> {
 	public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
 		ctx.close();
 		clientProxyChannel.close();
+		cacheBuffer.clear();
 		logger.error("IntenetDataHandler error", cause);
 	}
 }
